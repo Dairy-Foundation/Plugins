@@ -1,0 +1,12 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+local.properties
+
+.idea
+.kotlin
+
+# Ignore Gradle build output directory
+build
+
+.DS_Store
