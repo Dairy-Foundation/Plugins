@@ -2,13 +2,12 @@ package dev.frozenmilk.libs
 
 import dev.frozenmilk.easyautolibraries.AbstractEasyAutoLibrary
 import dev.frozenmilk.easyautolibraries.util.SubMethodAccess
-import org.gradle.internal.instantiation.InstantiatorFactory
 import org.gradle.internal.metaobject.DynamicInvokeResult
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import javax.inject.Inject
 
-abstract class Kotlin @Inject constructor(parent: AbstractEasyAutoLibrary?, instantiatorFactory: InstantiatorFactory) : AbstractEasyAutoLibrary("kotlin", parent, instantiatorFactory), SubMethodAccess {
+open class Kotlin @Inject constructor(override val parent: AbstractEasyAutoLibrary<*>) : AbstractEasyAutoLibrary<Kotlin>("kotlin"), SubMethodAccess {
 	val version = project.objects.property(JavaLanguageVersion::class.java)
 	init {
 		version.set(JavaLanguageVersion.of(8))

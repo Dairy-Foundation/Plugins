@@ -11,7 +11,7 @@ import org.gradle.api.provider.Provider
 import org.gradle.internal.metaobject.DynamicInvokeResult
 
 class EasyAutoLibraryDependency(
-	override val parent: AbstractEasyAutoLibrary,
+	override val parent: AbstractEasyAutoLibrary<*>,
 	override val name: String,
 	/**
 	 * converts input version string to full dependency notation string
@@ -20,26 +20,33 @@ class EasyAutoLibraryDependency(
 	/**
 	 * repositories that this depends on
 	 */
-	private val repository: EasyAutoLibraryRepository
-) : EasyAutoLibraryMarker(), VersionProvider, SubMethodAccess, SubPropertyAccess {
-	private var _configurationName: String? = null
-	override fun onAccess() = repository.access()
+	private val repository: () -> EasyAutoLibraryRepository
+) : EasyAutoLibraryMarker<EasyAutoLibraryDependency>(), VersionProvider, SubMethodAccess, SubPropertyAccess {
+	override fun onAccess() {
+		repository().access()
+		parent.project.afterEvaluate {
+			configurationNames.forEach {
+				dependencies.add(it, notationProvider)
+			}
+		}
+	}
 
+	private var _configurationNames: Set<String>? = null
 	/**
 	 * the gradle dependencies configuration name, automatically resolves to find the most local one
 	 */
-	var configurationName: String
+	var configurationNames: Set<String>
 		get() =
 			// trys the configuration name of the parent
 			try {
-				_configurationName ?: parent.configurationName
+				_configurationNames ?: parent.configurationNames
 			}
 			// if it crashes, we know there is a parent
 			catch (_: IllegalStateException) {
 				error("unable to find configuration for $name, try setting the `configurationName` property directly for $name or a parent in $nameTree")
 			}
 
-		set(value) { _configurationName = value }
+		set(value) { _configurationNames = value }
 
 	private var _version: String? = null
 
@@ -56,23 +63,38 @@ class EasyAutoLibraryDependency(
 
 		set(value) { _version = value }
 
-	private val notationProperty: Provider<String> = parent.project.provider { notation(version) }
-	private val dynamicNotationProperty = DynamicInvokeResult.found(notationProperty)
-	override fun tryGetProperty() = dynamicNotationProperty.also { access() }
+	private val notationProvider: Provider<String> = parent.project.provider { notation(version) }
+	private val dynamicNotationProvider = DynamicInvokeResult.found(notationProvider)
+	override fun tryGetProperty() = dynamicNotationProvider.also { access() }
 
-	fun apply(configurationName: String = this.configurationName) = parent.project.dependencies.add(configurationName, notationProperty).also { access() }
-	fun apply(configuration: Configuration, version: String) = apply(configuration.name, version)
-	fun apply(configurationName: String = this.configurationName, version: String) = parent.project.dependencies.add(configurationName, notation(version)).also { access() }
+	@JvmOverloads
+	operator fun invoke(version: String = this.version, configurationNames: Collection<String>) {
+		this._configurationNames = configurationNames.toSet()
+		this.version = version
+		access()
+	}
+	operator fun invoke(version: String, configurationName: String) {
+		this.configurationNames += configurationName
+		this.version = version
+		access()
+	}
+	operator fun invoke(version: String) {
+		this.version = version
+		access()
+	}
+	operator fun invoke() = access()
 
 	private val funArgs = arrayOf<Array<NullableType<*>>>(
 		// <name>()
 		arrayOf(),
 		// <name>(version)
 		arrayOf(String::class.java.typeOf()),
-		// <name>(configurationName, version)
+		// <name>(configurationNames)
+		arrayOf(Collection::class.java.typeOf()),
+		// <name>(version, configurationName)
 		arrayOf(String::class.java.typeOf(), String::class.java.typeOf()),
-		// <name>(configuration, version)
-		arrayOf(Configuration::class.java.typeOf(), String::class.java.typeOf()),
+		// <name>(version, configurationNames)
+		arrayOf(String::class.java.typeOf(), Collection::class.java.typeOf()),
 	)
 
 	override fun hasMethod(vararg arguments: Any?): Boolean {
@@ -84,10 +106,12 @@ class EasyAutoLibraryDependency(
 
 	override fun tryInvokeMethod(vararg arguments: Any?): DynamicInvokeResult {
 		return DynamicInvokeResult.found(arguments.map { typeOf(it) }.run {
-			if (funArgs[0].isAssignableFrom(this)) apply()
-			else if (funArgs[1].isAssignableFrom(this)) apply(version = arguments[0] as String)
-			else if (funArgs[2].isAssignableFrom(this)) apply(arguments[0] as String, arguments[1] as String)
-			else if (funArgs[3].isAssignableFrom(this)) apply(arguments[0] as Configuration, arguments[1] as String)
+			@Suppress("UNCHECKED_CAST")
+			if (funArgs[0].isAssignableFrom(this)) invoke()
+			else if (funArgs[1].isAssignableFrom(this)) invoke(arguments[0] as String)
+			else if (funArgs[2].isAssignableFrom(this)) invoke(this@EasyAutoLibraryDependency.version, arguments[0] as Collection<String>)
+			else if (funArgs[3].isAssignableFrom(this)) invoke(arguments[0] as String, arguments[1] as String)
+			else if (funArgs[4].isAssignableFrom(this)) invoke(arguments[0] as String, arguments[1] as Collection<String>)
 			else return DynamicInvokeResult.notFound()
 		})
 	}

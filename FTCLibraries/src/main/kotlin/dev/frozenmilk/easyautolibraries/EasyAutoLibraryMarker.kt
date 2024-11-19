@@ -1,11 +1,18 @@
 package dev.frozenmilk.easyautolibraries
 
 import dev.frozenmilk.easyautolibraries.util.NamedTree
+import org.gradle.api.Action
 
 /**
  * sealed marker class for FTCLibrary DSL Trees
  */
-sealed class EasyAutoLibraryMarker () : NamedTree<AbstractEasyAutoLibrary> {
+sealed class EasyAutoLibraryMarker<SELF: EasyAutoLibraryMarker<SELF>>() : NamedTree<AbstractEasyAutoLibrary<*>> {
+	@Suppress("UNCHECKED_CAST")
+	operator fun invoke(configure: Action<SELF>) {
+		configure.execute(this as SELF)
+		this.access()
+	}
+
 	var accessed = false
 		private set
 	/**

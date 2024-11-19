@@ -5,6 +5,6 @@ import org.gradle.api.Project
 
 class FTCLibrariesPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
-		project.extensions.add("ftc", project.objects.newInstance(FTC::class.java, project))
+		project.extensions.add("ftc", FTC(project))
 	}
 }

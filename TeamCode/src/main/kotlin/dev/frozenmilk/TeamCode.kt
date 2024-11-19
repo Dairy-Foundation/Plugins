@@ -2,7 +2,6 @@ package dev.frozenmilk
 
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
-import dev.frozenmilk.libs.SDK
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -21,8 +20,13 @@ class TeamCode : Plugin<Project> {
 		}
 
 		val ftcLibraries = project.extensions.getByType(FTC::class.java)
-		ftcLibraries.configurationName = "implementation"
-		val sdk = ftcLibraries.getSubLibrary("sdk") as SDK
+		ftcLibraries.configurationNames = mutableSetOf("implementation")
+		val sdk = ftcLibraries.sdk
+
+		sdk {
+			google
+			mavenCentral
+		}
 
 		val ftcRobotControllerConfiguration: Configuration
 		with(project) {
@@ -78,7 +82,7 @@ class TeamCode : Plugin<Project> {
 
 
 					// we need to ensure that the sdk config is setup here
-					sdk.applyDefaultsIfNeeded()
+					//sdk.applyDefaultsIfNeeded()
 
 					/**
 					 * We keep the versionCode and versionName of robot controller applications in sync with

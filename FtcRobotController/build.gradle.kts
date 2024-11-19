@@ -14,10 +14,17 @@ plugins {
     id("dev.frozenmilk.ftc-libraries")
 }
 
-ftc {
-    sdk {
-        configurationName = "compileOnly"
-    }
+ftc.sdk {
+    configurationNames = mutableSetOf("implementation")
+    FtcCommon
+    RobotCore
+    RobotServer
+    Hardware
+    Vision
+    Inspection
+    Blocks
+    OnBotJava
+    appcompat
 }
 
 android {

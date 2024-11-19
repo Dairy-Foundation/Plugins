@@ -13,12 +13,11 @@ class Library : Plugin<Project> {
 			plugins.apply("dev.frozenmilk.ftc-libraries")
 		}
 
-		project.extensions.getByType(FTC::class.java)
-			.getSubLibrary("sdk") {
-				configurationName = "compileOnly"
-				getDependency("FtcCommon") { apply() }
-				getDependency("RobotCore") { apply() }
-			}
+		val ftc = project.extensions.getByType(FTC::class.java)
+		ftc.sdk {
+			configurationNames = mutableSetOf("compileOnly")
+			appcompat
+		}
 
 		val androidComponentsExtension = project.extensions.getByType(AndroidComponentsExtension::class.java)
 

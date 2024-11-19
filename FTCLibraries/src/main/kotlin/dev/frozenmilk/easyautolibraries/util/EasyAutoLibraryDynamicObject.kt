@@ -8,23 +8,19 @@ import groovy.lang.MissingMethodException
 import groovy.lang.MissingPropertyException
 import org.gradle.api.Action
 import org.gradle.api.artifacts.dsl.RepositoryHandler
-import org.gradle.api.plugins.Convention
-import org.gradle.internal.extensibility.DefaultConvention
-import org.gradle.internal.instantiation.InstantiatorFactory
 import org.gradle.internal.metaobject.DynamicInvokeResult
 import org.gradle.internal.metaobject.DynamicObject
 import java.net.URI
 
-class EasyAutoLibraryDynamicObject(private val container: AbstractEasyAutoLibrary, instantiatorFactory: InstantiatorFactory) : Convention by DefaultConvention(instantiatorFactory.decorateLenient()), DynamicObject {
-	private val namedContents = mutableMapOf<String, EasyAutoLibraryMarker>()
-	operator fun get(name: String): EasyAutoLibraryMarker? = namedContents[name]
+class EasyAutoLibraryDynamicObject(private val container: AbstractEasyAutoLibrary<*>) : DynamicObject {
+	private val namedContents = mutableMapOf<String, EasyAutoLibraryMarker<*>>()
+	private operator fun get(name: String): EasyAutoLibraryMarker<*>? = namedContents[name]
 	val values
-		get() = namedContents.values as Collection<EasyAutoLibraryMarker>
+		get() = namedContents.values as Collection<EasyAutoLibraryMarker<*>>
 
-	private fun <MARKER: EasyAutoLibraryMarker> register(marker: MARKER) = run {
+	private fun <MARKER: EasyAutoLibraryMarker<*>> register(marker: MARKER) = run {
 		require(!namedContents.contains(marker.name)) { "${container.nameTree} already contains an object named ${marker.name}" }
 		marker.also {
-			(this as Convention).add(it.name, it)
 			namedContents[it.name] = it
 		}
 	}
@@ -33,31 +29,27 @@ class EasyAutoLibraryDynamicObject(private val container: AbstractEasyAutoLibrar
 	// SubLibraries
 	//
 
-	fun <LIB: AbstractEasyAutoLibrary> registerSubLibrary(cls: Class<LIB>) = register(container.project.objects.newInstance(cls, container))
+	fun <LIB: AbstractEasyAutoLibrary<LIB>> registerSubLibrary(lib: LIB) = register(lib)
+	fun getSubLibrary(name: String) = this[name] as? AbstractEasyAutoLibrary<*>
 
 	//
 	// Repositories
 	//
 
-	fun registerRepository(easyAutoLibraryRepository: EasyAutoLibraryRepository): EasyAutoLibraryRepository = register(easyAutoLibraryRepository).also {
-		container.parent?.asDynamicObject?.registerRepository(it)
-	}
-	fun registerRepository(name: String, configureRepositoryHandler: RepositoryHandler.() -> Unit) = registerRepository(EasyAutoLibraryRepository(container, name, configureRepositoryHandler))
-	fun registerRepository(name: String, uri: String) = registerRepository(EasyAutoLibraryRepository(container, name, uri))
-	fun registerRepository(name: String, uri: URI) = registerRepository(EasyAutoLibraryRepository(container, name, uri))
-	private fun getRepositorySilent(name: String): EasyAutoLibraryRepository = try {
-		requireNotNull(this[name] as? EasyAutoLibraryRepository) { "unable to find repository with name $name for ${container.name}" }
-	}
-	catch (_: IllegalArgumentException) {
-		requireNotNull(container.parent?.asDynamicObject?.getRepositorySilent(name)) { "unable to find repository with name $name for ${container.nameTree}" }
-	}
+	private fun registerRepository(easyAutoLibraryRepository: EasyAutoLibraryRepository): EasyAutoLibraryRepository = container.parent?.asDynamicObject?.registerRepository(easyAutoLibraryRepository) ?: register(easyAutoLibraryRepository)
+	fun getOrRegisterRepository(name: String, configureRepositoryHandler: RepositoryHandler.() -> Unit) = getRepository(name) ?: registerRepository(EasyAutoLibraryRepository(container, name, configureRepositoryHandler))
+	fun getOrRegisterRepository(name: String, uri: String) = getRepository(name) ?: registerRepository(EasyAutoLibraryRepository(container, name, uri))
+	fun getOrRegisterRepository(name: String, uri: URI) = getRepository(name) ?: registerRepository(EasyAutoLibraryRepository(container, name, uri))
+	fun getRepository(name: String): EasyAutoLibraryRepository? = this[name] as? EasyAutoLibraryRepository ?: container.parent?.asDynamicObject?.getRepository(name)
+	fun tryGetRepository(name: String): EasyAutoLibraryRepository = requireNotNull(getRepository(name)) { "unable to find repository with name $name for ${container.nameTree}" }
 
 	//
 	// Dependencies
 	//
 
-	fun registerDependency(name: String, notation: (version: String) -> String, repository: EasyAutoLibraryRepository) = register(EasyAutoLibraryDependency(container, name, notation, repository))
-	fun registerDependency(name: String, notation: (version: String) -> String, repositoryName: String) = register(EasyAutoLibraryDependency(container, name, notation, getRepositorySilent(repositoryName)))
+	fun registerDependency(name: String, notation: (version: String) -> String, repository: () -> EasyAutoLibraryRepository) = register(EasyAutoLibraryDependency(container, name, notation, repository))
+	fun registerDependency(name: String, notation: (version: String) -> String, repositoryName: String) = register(EasyAutoLibraryDependency(container, name, notation) { tryGetRepository(repositoryName) })
+	fun getDependency(name: String) = this[name] as? EasyAutoLibraryDependency
 
 	//
 	// Methods
@@ -99,7 +91,7 @@ class EasyAutoLibraryDynamicObject(private val container: AbstractEasyAutoLibrar
 				&& Action::class.java.isAssignableFrom(arguments[0]!!.javaClass)
 			) {
 				@Suppress("UNCHECKED_CAST")
-				(arguments[0] as Action<EasyAutoLibraryMarker>).execute(this)
+				(arguments[0] as Action<EasyAutoLibraryMarker<*>>).execute(this)
 				access()
 				return@run DynamicInvokeResult.found()
 			}
@@ -113,7 +105,6 @@ class EasyAutoLibraryDynamicObject(private val container: AbstractEasyAutoLibrar
 			}
 		} ?: DynamicInvokeResult.notFound()
 
-	override fun getExtensionsAsDynamicObject() = this
 	//
 	// Properties
 	//
