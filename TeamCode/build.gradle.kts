@@ -1,6 +1,7 @@
 repositories {
 	mavenCentral()
 	google()
+	maven("https://repo.dairy.foundation/releases")
 }
 
 plugins {
