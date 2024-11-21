@@ -15,7 +15,7 @@ plugins {
 val sdkVersion = "10.1.1"
 
 group = "dev.frozenmilk"
-version = "$sdkVersion-0.0.0"
+version = "$sdkVersion-0.0.1"
 
 kotlin {
 	jvmToolchain(17)

@@ -9,6 +9,7 @@ import org.gradle.api.artifacts.Configuration
 import org.gradle.kotlin.dsl.get
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.regex.Pattern
 import java.util.zip.ZipFile
 
@@ -97,7 +98,7 @@ class TeamCode : Plugin<Project> {
 					 * @see <a href="http://developer.android.com/tools/publishing/versioning.html">Versioning Your App</a>
 					 */
 					val ftcRobotControllerJar = ZipFile(ftcRobotControllerConfiguration.resolvedConfiguration.files.find {
-						it.path.contains("com.qualcomm.ftcrobotcontroller/FtcRobotController/${sdk.version}")
+						it.path.contains("com.qualcomm.ftcrobotcontroller${File.separator}FtcRobotController${File.separator}${sdk.version}")
 					}!!)
 					val readStream = ftcRobotControllerJar.getInputStream(ftcRobotControllerJar.getEntry("AndroidManifest.xml"))
 					val bis = BufferedInputStream(readStream)
