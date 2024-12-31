@@ -6,7 +6,6 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.kotlin.dsl.get
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -25,17 +24,19 @@ class TeamCodePlugin : Plugin<Project> {
 		val sdk = ftcLibraries.sdk
 
 		sdk {
-			google
-			mavenCentral
+			it.google
+			it.mavenCentral
 		}
 
 		val ftcRobotControllerConfiguration: Configuration
 		with(project) {
 			repositories.maven {
-				url = uri("https://repo.dairy.foundation/releases")
+				it.url = uri("https://repo.dairy.foundation/releases")
 			}
 
-			ftcRobotControllerConfiguration = configurations.create("FtcRobotController")
+			ftcRobotControllerConfiguration = configurations.create("FtcRobotController") {
+				it.isCanBeResolved = true
+			}
 			dependencies.add(ftcRobotControllerConfiguration.name, "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
 			dependencies.add("implementation", "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
 		}
@@ -55,28 +56,28 @@ class TeamCodePlugin : Plugin<Project> {
 					create("release") {
 						val apkStoreFile = System.getenv("APK_SIGNING_STORE_FILE")
 						if (apkStoreFile != null) {
-							keyAlias = System.getenv("APK_SIGNING_KEY_ALIAS")
-							keyPassword = System.getenv("APK_SIGNING_KEY_PASSWORD")
-							storeFile = project.file(System.getenv("APK_SIGNING_STORE_FILE"))
-							storePassword = System.getenv("APK_SIGNING_STORE_PASSWORD")
+							it.keyAlias = System.getenv("APK_SIGNING_KEY_ALIAS")
+							it.keyPassword = System.getenv("APK_SIGNING_KEY_PASSWORD")
+							it.storeFile = project.file(System.getenv("APK_SIGNING_STORE_FILE"))
+							it.storePassword = System.getenv("APK_SIGNING_STORE_PASSWORD")
 						} else {
-							keyAlias = "androiddebugkey"
-							keyPassword = "android"
-							storeFile = project.file("libs/ftc.debug.keystore")
-							storePassword = "android"
+							it.keyAlias = "androiddebugkey"
+							it.keyPassword = "android"
+							it.storeFile = project.file("libs/ftc.debug.keystore")
+							it.storePassword = "android"
 						}
 					}
 
 					getByName("debug") {
-						keyAlias = "androiddebugkey"
-						keyPassword = "android"
-						storeFile = project.file("libs/ftc.debug.keystore")
-						storePassword = "android"
+						it.keyAlias = "androiddebugkey"
+						it.keyPassword = "android"
+						it.storeFile = project.file("libs/ftc.debug.keystore")
+						it.storePassword = "android"
 					}
 				}
 
 				defaultConfig {
-					signingConfig = signingConfigs["debug"]
+					signingConfig = signingConfigs.getByName("debug")
 					applicationId = "com.qualcomm.ftcrobotcontroller"
 					minSdk = 24
 					targetSdk = 28
@@ -126,7 +127,7 @@ class TeamCodePlugin : Plugin<Project> {
 
 				buildTypes {
 					release {
-						signingConfig = signingConfigs["release"]
+						signingConfig = signingConfigs.getByName("release")
 
 						ndk {
 							abiFilters.add("armeabi-v7a")

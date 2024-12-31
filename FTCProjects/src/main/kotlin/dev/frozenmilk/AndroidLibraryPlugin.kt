@@ -6,6 +6,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+@Suppress("unused")
 class AndroidLibraryPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		with(project) {
@@ -15,8 +16,8 @@ class AndroidLibraryPlugin : Plugin<Project> {
 
 		val ftc = project.extensions.getByType(FTC::class.java)
 		ftc.sdk {
-			configurationNames = mutableSetOf("compileOnly")
-			appcompat
+			it.configurationNames = mutableSetOf("compileOnly")
+			it.appcompat
 		}
 
 		val androidComponentsExtension = project.extensions.getByType(AndroidComponentsExtension::class.java)
