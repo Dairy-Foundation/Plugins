@@ -33,7 +33,7 @@ dependencies {
     compileOnly("org.jetbrains.dokka:dokka-gradle-plugin:2.0.0")
 }
 
-gradlePlugin {
+publishing {
     repositories {
         maven {
             name = "Dairy"
@@ -44,6 +44,9 @@ gradlePlugin {
             }
         }
     }
+}
+
+gradlePlugin {
     plugins {
         create("DairyPublishing") {
             id = "dev.frozenmilk.publish"
