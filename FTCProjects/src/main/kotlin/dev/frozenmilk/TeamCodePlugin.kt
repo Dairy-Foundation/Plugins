@@ -13,7 +13,7 @@ import java.io.File
 import java.util.regex.Pattern
 import java.util.zip.ZipFile
 
-class TeamCode : Plugin<Project> {
+class TeamCodePlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		with(project) {
 			plugins.apply("com.android.application")

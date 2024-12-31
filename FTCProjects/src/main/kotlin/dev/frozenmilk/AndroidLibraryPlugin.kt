@@ -6,7 +6,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class Library : Plugin<Project> {
+class AndroidLibraryPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		with(project) {
 			plugins.apply("com.android.library")

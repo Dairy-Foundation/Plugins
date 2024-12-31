@@ -5,5 +5,7 @@ pluginManagement {
 		google()
 		maven("https://repo.dairy.foundation/releases")
 	}
+
 	includeBuild("../FTCLibraries")
+	includeBuild("../DairyPublishing")
 }
