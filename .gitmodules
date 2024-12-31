@@ -1,0 +1,3 @@
+[submodule "EasyAutoLibraries"]
+	path = EasyAutoLibraries
+	url = git@github.com:Dairy-Foundation/EasyAutoLibraries
