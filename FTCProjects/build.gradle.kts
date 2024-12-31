@@ -45,13 +45,13 @@ gradlePlugin {
 	plugins {
 		create("Library") {
 			id = "dev.frozenmilk.android-library"
-			implementationClass = "dev.frozenmilk.Library"
+			implementationClass = "dev.frozenmilk.AndroidLibraryPlugin"
 		}
 	}
 	plugins {
 		create("TeamCode") {
 			id = "dev.frozenmilk.teamcode"
-			implementationClass = "dev.frozenmilk.TeamCode"
+			implementationClass = "dev.frozenmilk.TeamCodePlugin"
 		}
 	}
 }
