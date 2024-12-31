@@ -1,54 +1,47 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 repositories {
 	mavenCentral()
 	google()
 }
 
 plugins {
-	`kotlin-dsl`
+	id("org.jetbrains.kotlin.jvm") version "2.0.21"
 	id("java-gradle-plugin")
-	//noinspection GradleDependency
-	id("org.jetbrains.kotlin.jvm") version "1.9.23"
-	id("maven-publish")
+	id("dev.frozenmilk.publish")
 }
+
+val sdkVersion = "10.1.1"
 
 group = "dev.frozenmilk"
 // sdkversion-thisversion
-version = "10.1.1-0.0.0"
+version = "$sdkVersion-0.0.0"
 
 kotlin {
 	jvmToolchain(17)
 	compilerOptions {
 		freeCompilerArgs.add("-Xjvm-default=all")
 	}
+	coreLibrariesVersion = "1.9.24"
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+	compilerOptions.apiVersion.set(KotlinVersion.KOTLIN_1_9)
 }
 
 dependencies {
 	//noinspection AndroidGradlePluginVersion
 	implementation("com.android.tools.build:gradle:8.7.0")
 	//noinspection GradleDependency
-	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.23")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
 	implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
+	api("dev.frozenmilk:EasyAutoLibraries")
 }
 
-publishing {
-	repositories {
-		maven {
-			name = "Dairy"
-			url = uri("https://repo.dairy.foundation/releases")
-			credentials(PasswordCredentials::class)
-			authentication {
-				create<BasicAuthentication>("basic")
-			}
-		}
-		maven {
-			name = "DairySNAPSHOT"
-			url = uri("https://repo.dairy.foundation/snapshots")
-			credentials(PasswordCredentials::class)
-			authentication {
-				create<BasicAuthentication>("basic")
-			}
-		}
-	}
+dairyPublishing {
+	// git directory is in the parent
+	gitDir = file("..")
 }
 
 gradlePlugin {
