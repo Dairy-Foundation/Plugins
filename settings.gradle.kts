@@ -1,9 +1,7 @@
-includeBuild("FTCLibraries")
-
-includeBuild("Library")
+includeBuild("DairyPublishing")
 
 includeBuild("FtcRobotController")
-includeBuild("TeamCode")
 
-includeBuild("TestLibrary")
-includeBuild("Test")
+includeBuild("EasyAutoLibraries")
+includeBuild("FTCLibraries")
+includeBuild("FTCProjects")
