@@ -12,11 +12,7 @@ plugins {
 	id("dev.frozenmilk.publish")
 }
 
-val sdkVersion = "10.1.1"
-
 group = "dev.frozenmilk"
-// sdkversion-thisversion
-version = "$sdkVersion-0.0.0"
 
 kotlin {
 	jvmToolchain(17)

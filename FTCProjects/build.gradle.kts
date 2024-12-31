@@ -13,11 +13,7 @@ plugins {
 	id("dev.frozenmilk.publish")
 }
 
-val sdkVersion = "10.1.1"
-
 group = "dev.frozenmilk"
-// sdkversion-thisversion
-version = "$sdkVersion-0.0.0"
 
 kotlin {
 	jvmToolchain(17)
@@ -37,8 +33,7 @@ dependencies {
 	//noinspection GradleDependency
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
 	implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
-	//noinspection GradleDynamicVersion
-	implementation("dev.frozenmilk:FTCLibraries:$sdkVersion-0.0.+")
+	implementation("dev.frozenmilk:FTCLibraries")
 }
 
 dairyPublishing {

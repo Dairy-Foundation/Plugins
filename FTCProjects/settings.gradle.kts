@@ -6,6 +6,11 @@ pluginManagement {
 		maven("https://repo.dairy.foundation/releases")
 	}
 
-	includeBuild("../FTCLibraries")
 	includeBuild("../DairyPublishing")
+}
+
+includeBuild("../FTCLibraries") {
+	dependencySubstitution {
+		substitute(module("dev.frozenmilk:FTCLibraries")).using(project(":"))
+	}
 }
