@@ -9,8 +9,12 @@ import org.jetbrains.kotlin.gradle.utils.named
 @Suppress("unused")
 class DairyDocPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.run{
-        plugins.apply("org.jetbrains.dokka")
-        plugins.apply("org.jetbrains.dokka-javadoc")
+        "org.jetbrains.dokka".let {
+            if (!plugins.hasPlugin(it)) plugins.apply(it)
+        }
+        "org.jetbrains.dokka-javadoc".let {
+            if (!plugins.hasPlugin(it)) plugins.apply(it)
+        }
         pluginManager.withPlugin("com.android.library") {
             dependencies.add("dokkaPlugin", "org.jetbrains.dokka:android-documentation-plugin:2.0.0")
         }
