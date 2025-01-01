@@ -74,7 +74,7 @@ class DairyPublishingPlugin : Plugin<Project> {
                     }}.assertNormalExitValue()
                     sout.toString().trim()
                 }.ifBlank { throw UnknownError("unable to determine hashcode for HEAD, this shouldn't be reachable") }
-                version = "SNAPSHOT@$hash"
+                version = "SNAPSHOT-$hash"
                 true
             }
             else {
