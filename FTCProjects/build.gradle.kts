@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 repositories {
 	mavenCentral()
 	google()
-	maven("https://repo.dairy.foundation/releases")
 }
 
 plugins {
@@ -36,6 +35,7 @@ dependencies {
 	afterEvaluate {
 		implementation("dev.frozenmilk:FTCLibraries:$version")
 	}
+	implementation("dev.frozenmilk:DairyPublishing:0.0.4")
 }
 
 dairyPublishing {

@@ -6,13 +6,20 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.testing.Test
+import org.gradle.internal.extensions.core.serviceOf
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainService
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.regex.Pattern
 import java.util.zip.ZipFile
+import javax.inject.Inject
 
-class TeamCodePlugin : Plugin<Project> {
+@Suppress("unused")
+class TeamCodePlugin @Inject constructor(private val javaToolchainService: JavaToolchainService) : Plugin<Project> {
 	override fun apply(project: Project) {
 		with(project) {
 			plugins.apply("com.android.application")
@@ -30,15 +37,32 @@ class TeamCodePlugin : Plugin<Project> {
 
 		val ftcRobotControllerConfiguration: Configuration
 		with(project) {
+			extensions.getByType(JavaPluginExtension::class.java).run {
+				toolchain {
+					it.languageVersion.set(JavaLanguageVersion.of(8))
+				}
+			}
+
 			repositories.maven {
 				it.url = uri("https://repo.dairy.foundation/releases")
 			}
 
 			ftcRobotControllerConfiguration = configurations.create("FtcRobotController") {
 				it.isCanBeResolved = true
+				it.isVisible = false
 			}
-			dependencies.add(ftcRobotControllerConfiguration.name, "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
-			dependencies.add("implementation", "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
+
+			afterEvaluate {
+				dependencies.add(ftcRobotControllerConfiguration.name, "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
+				dependencies.add("implementation", "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
+			}
+
+			dependencies.add("testImplementation", "junit:junit:4.13.2")
+			tasks.withType(Test::class.java).configureEach { testTask ->
+				testTask.javaLauncher.set(javaToolchainService.launcherFor {
+					it.languageVersion.set(JavaLanguageVersion.of(17))
+				})
+			}
 		}
 
 		val androidComponentsExtension = project.extensions.getByType(AndroidComponentsExtension::class.java)
