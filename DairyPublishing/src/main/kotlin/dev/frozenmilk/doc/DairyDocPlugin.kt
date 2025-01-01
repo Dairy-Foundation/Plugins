@@ -3,16 +3,17 @@ package dev.frozenmilk.doc
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.jvm.tasks.Jar
-import org.jetbrains.dokka.gradle.DokkaPlugin
-import org.jetbrains.dokka.gradle.formats.DokkaJavadocPlugin
 import org.jetbrains.dokka.gradle.tasks.DokkaGeneratePublicationTask
 import org.jetbrains.kotlin.gradle.utils.named
 
 @Suppress("unused")
 class DairyDocPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.run{
-        plugins.apply(DokkaPlugin::class.java)
-        plugins.apply(DokkaJavadocPlugin::class.java)
+        plugins.apply("org.jetbrains.dokka")
+        plugins.apply("org.jetbrains.dokka-javadoc")
+        pluginManager.withPlugin("com.android.library") {
+            dependencies.add("dokkaPlugin", "org.jetbrains.dokka:android-documentation-plugin:2.0.0")
+        }
 
         val dokkaHtmlJar = tasks.register("dokkaHtmlJar", Jar::class.java) { task ->
             task.run {
