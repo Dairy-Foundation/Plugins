@@ -51,11 +51,6 @@ class TeamCodePlugin @Inject constructor(private val javaToolchainService: JavaT
 				it.isVisible = false
 			}
 
-			afterEvaluate {
-				dependencies.add(ftcRobotControllerConfiguration.name, "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
-				dependencies.add("implementation", "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
-			}
-
 			dependencies.add("testImplementation", "junit:junit:4.13.2")
 			tasks.withType(Test::class.java).configureEach { testTask ->
 				testTask.javaLauncher.set(javaToolchainService.launcherFor {
@@ -70,6 +65,11 @@ class TeamCodePlugin @Inject constructor(private val javaToolchainService: JavaT
 			error("TeamCode can only be applied to an Android Application")
 
 		androidComponentsExtension.finalizeDsl { it ->
+			with(project) {
+				dependencies.add(ftcRobotControllerConfiguration.name, "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
+				dependencies.add("implementation", "com.qualcomm.ftcrobotcontroller:FtcRobotController:${sdk.version}")
+			}
+
 			it.apply {
 				namespace = namespace ?: "org.firstinspires.ftc.teamcode"
 
