@@ -7,7 +7,7 @@ import dev.frozenmilk.easyautolibraries.util.VersionProvider
 open class SDK (
 	override val parent: AbstractEasyAutoLibrary<*>,
 ) : AbstractEasyAutoLibrary<SDK>("sdk"), VersionProvider {
-	override val version = "10.1.1"
+	override val version = "10.2.0"
 
 	val mavenCentral by getOrRegisterRepository("mavenCentral", { mavenCentral() })
 	val google by getOrRegisterRepository("google", { google() })

@@ -78,7 +78,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.qualcomm.ftcrobotcontroller"
             artifactId = "FtcRobotController"
-            version = "10.1.1"
+            version = "10.2.0"
 
             afterEvaluate {
                 from(components["release"])
