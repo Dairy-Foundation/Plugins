@@ -6,4 +6,5 @@ pluginManagement {
 	}
 
 	includeBuild("../FTCLibraries")
+	includeBuild("../DairyPublishing")
 }

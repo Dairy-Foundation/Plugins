@@ -10,8 +10,9 @@ repositories {
 plugins {
     //noinspection AndroidGradlePluginVersion
     id("com.android.library") version "8.7.0"
-    id("maven-publish")
     id("dev.frozenmilk.ftc-libraries")
+    id("dev.frozenmilk.publish")
+    id("dev.frozenmilk.doc")
 }
 
 ftc.sdk {
@@ -55,30 +56,19 @@ android {
     }
 }
 
+dairyPublishing {
+    // git directory is in the parent
+    gitDir = file("..")
+}
+
 publishing {
-    repositories {
-        maven {
-            name = "Dairy"
-            url = uri("https://repo.dairy.foundation/releases")
-            credentials(PasswordCredentials::class)
-            authentication {
-                create<BasicAuthentication>("basic")
-            }
-        }
-        maven {
-            name = "DairySNAPSHOT"
-            url = uri("https://repo.dairy.foundation/snapshots")
-            credentials(PasswordCredentials::class)
-            authentication {
-                create<BasicAuthentication>("basic")
-            }
-        }
-    }
     publications {
         register<MavenPublication>("release") {
             groupId = "com.qualcomm.ftcrobotcontroller"
             artifactId = "FtcRobotController"
-            version = "10.2.0"
+
+            artifact(dairyDoc.dokkaHtmlJar)
+            artifact(dairyDoc.dokkaJavadocJar)
 
             afterEvaluate {
                 from(components["release"])
