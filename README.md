@@ -45,7 +45,7 @@ It is recommended to get this via applying the `TeamCode` plugin below.
 otherwise:
 ```kt
 dependencies {
-    implementation("com.qualcomm.ftcrobotcontroller:FtcRobotController:10.1.1")
+    implementation("com.qualcomm.ftcrobotcontroller:FtcRobotController:10.3.0")
 }
 ```
 
@@ -70,7 +70,7 @@ A plugin that makes it easy to set up FTC related libraries, uses
 
 ```kt
 plugins {
-    id("dev.frozenmilk.ftc-libraries") version "10.1.1-0.1.3"
+    id("dev.frozenmilk.ftc-libraries") version "10.3.0-0.1.3"
 }
 ```
 
@@ -94,11 +94,11 @@ ftc {
             configurationNames += "api"
         }
         // you can specify the default version for the whole sdk:
-        version = "10.1.1" // default for this plugin version
+        version = "10.3.0" // default for this plugin version
         // and configurationNames
         configurationNames = setOf("implementation")
     }
-    // note: the sdk is special, if you access the SDK at all, 
+    // note: the sdk is special, if you access the SDK at all,
     //  it will automatically add all of the SDK dependencies, but will make
     //  `Blocks` runtimeOnly. This configuration is good for TeamCode
     //  repositories
@@ -114,16 +114,16 @@ Further usage can be seen at the Templates repo, which shows how to use the
 TeamCode, JVMLibrary and AndroidLibrary plugins.
 
 ## TeamCode
-A plugin that sets up FTC teamcode projects using FTCLibraries, allowing teams 
+A plugin that sets up FTC teamcode projects using FTCLibraries, allowing teams
 to easily add other libraries to their project
 
-This automatically sets up the android application config, adds the whole sdk, 
-and the FtcRobotController module from above. See the templates repository for 
+This automatically sets up the android application config, adds the whole sdk,
+and the FtcRobotController module from above. See the templates repository for
 examples.
 
 ```kt
 plugins {
-    id("dev.frozenmilk.teamcode") version "10.1.1-0.1.3"
+    id("dev.frozenmilk.teamcode") version "10.3.0-0.1.3"
 }
 ```
 
@@ -138,7 +138,7 @@ See the templates repository for examples.
 
 ```kt
 plugins {
-    id("dev.frozenmilk.android-library") version "10.1.1-0.1.3"
+    id("dev.frozenmilk.android-library") version "10.3.0-0.1.3"
 }
 ```
 
@@ -152,7 +152,7 @@ See the templates repository for examples.
 
 ```kt
 plugins {
-    id("dev.frozenmilk.jvm-library") version "10.1.1-0.1.3"
+    id("dev.frozenmilk.jvm-library") version "10.3.0-0.1.3"
 }
 ```
 
@@ -161,7 +161,7 @@ plugins {
 ## Publish
 Used to set up publishing with a library to the Dairy maven repository.
 
-Integrates with git to prevent you from publishing an unclean working tree and 
+Integrates with git to prevent you from publishing an unclean working tree and
 to auto generate snapshot and release versions from either git tags or commit
 hashes.
 
