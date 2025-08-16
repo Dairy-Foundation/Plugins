@@ -167,7 +167,7 @@ hashes.
 
 ```kt
 plugins {
-    id("dev.frozenmilk.publish") version "0.0.4"
+    id("dev.frozenmilk.publish") version "0.0.5"
 }
 ```
 
@@ -183,7 +183,7 @@ Makes it easy to add javadoc and html jars to publications.
 
 ```kt
 plugins {
-    id("dev.frozenmilk.doc") version "0.0.4"
+    id("dev.frozenmilk.doc") version "0.0.5"
     // publication plugin required, try the one above!
 }
 

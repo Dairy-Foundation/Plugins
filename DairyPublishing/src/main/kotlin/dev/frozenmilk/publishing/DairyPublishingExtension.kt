@@ -25,4 +25,32 @@ interface DairyPublishingExtension {
      * the uri of the snapshots repository, by default this is the dairy snapshots repository
      */
     val snapshotsRepository: Property<URI>
+
+    /**
+     * git reference -- either a commit hash, or a tag
+     *
+     * accessing this will cache the result, so configure the plugin first
+     */
+    val gitRef: String
+
+    /**
+     * the version as determined by git
+     *
+     * accessing this will cache the result, so configure the plugin first
+     */
+    val version: String
+
+    /**
+     * if the working tree is clean
+     *
+     * accessing this will cache the result, so configure the plugin first
+     */
+    val clean: Boolean
+
+    /**
+     * if the version is a snapshot
+     *
+     * accessing this will cache the result, so configure the plugin first
+     */
+    val snapshot: Boolean
 }
