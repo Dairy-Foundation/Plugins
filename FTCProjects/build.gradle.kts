@@ -26,21 +26,19 @@ tasks.withType<KotlinCompile>().configureEach {
 	compilerOptions.apiVersion.set(KotlinVersion.KOTLIN_1_9)
 }
 
+dairyPublishing {
+	// git directory is in the parent
+	gitDir = file("..")
+}
+
 dependencies {
 	//noinspection AndroidGradlePluginVersion
 	implementation("com.android.tools.build:gradle:8.7.0")
 	//noinspection GradleDependency
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
 	implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
-	afterEvaluate {
-		implementation("dev.frozenmilk:FTCLibraries:$version")
-	}
+	implementation("dev.frozenmilk:FTCLibraries:${dairyPublishing.version}")
 	implementation("dev.frozenmilk:DairyPublishing:0.0.4")
-}
-
-dairyPublishing {
-	// git directory is in the parent
-	gitDir = file("..")
 }
 
 gradlePlugin {
