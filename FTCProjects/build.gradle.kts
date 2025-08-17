@@ -38,7 +38,6 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
 	implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
 	implementation("dev.frozenmilk:FTCLibraries:${dairyPublishing.version}")
-	implementation("dev.frozenmilk:DairyPublishing:0.0.4")
 }
 
 gradlePlugin {
