@@ -7,11 +7,13 @@ repositories {
     google()
 }
 
+version = "10.3.0"
+
 plugins {
     //noinspection AndroidGradlePluginVersion
     id("com.android.library") version "8.7.0"
+    id("org.gradle.maven-publish")
     id("dev.frozenmilk.ftc-libraries")
-    id("dev.frozenmilk.publish")
     id("dev.frozenmilk.doc")
 }
 
@@ -56,12 +58,17 @@ android {
     }
 }
 
-dairyPublishing {
-    // git directory is in the parent
-    gitDir = file("..")
-}
-
 publishing {
+    repositories {
+        maven {
+            name = "Dairy"
+            url = uri("https://repo.dairy.foundation/releases")
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
     publications {
         register<MavenPublication>("release") {
             groupId = "com.qualcomm.ftcrobotcontroller"
