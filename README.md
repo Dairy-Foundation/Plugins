@@ -211,3 +211,44 @@ org.jetbrains.dokka.experimental.gradle.pluginMode.noWarn=true
 See full examples in the Templates repository.
 
 [You can find the latest verion here](https://repo.dairy.foundation/#/releases/dev/frozenmilk/DairyPublishing)
+
+## BuildMetaData
+
+used to generate a metadata object at compile time.
+
+```kt
+plugins {
+    id("dev.frozenmilk.build-meta-data") version "0.0.0"
+    // for example, to embed git meta data:
+    id("dev.frozenmilk.publish") version "0.0.5"
+}
+
+meta {
+    // will generate `com.example.MyLibraryBuildMetaData`
+    packagePath = "com.example"
+    name = "MyLibrary"
+
+    // each call to register field will add a static field
+	registerField("name", "String", "\"com.example.MyLibrary\"")
+	registerField("clean", "Boolean") { "${dairyPublishing.clean}" }
+	registerField("gitRef", "String") { "\"${dairyPublishing.gitRef}\"" }
+	registerField("snapshot", "Boolean") { "${dairyPublishing.snapshot}" }
+	registerField("version", "String") { "\"${dairyPublishing.version}\"" }
+}
+
+```
+
+the above configuration will generate a file like this:
+
+```kt
+package com.example
+object MyLibraryBuildMetaData {
+	@JvmStatic val `name`: String = "com.example.MyLibrary";
+	@JvmStatic val `clean`: Boolean = false;
+	@JvmStatic val `gitRef`: String = "ef7510f";
+	@JvmStatic val `snapshot`: Boolean = true;
+	@JvmStatic val `version`: String = "SNAPSHOT-ef7510f";
+}
+```
+
+[You can find the latest verion here](https://repo.dairy.foundation/#/releases/dev/frozenmilk/BuildMetaData)

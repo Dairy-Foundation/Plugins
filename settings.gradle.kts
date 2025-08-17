@@ -1,4 +1,5 @@
 includeBuild("DairyPublishing")
+includeBuild("BuildMetaData")
 
 includeBuild("FtcRobotController")
 
