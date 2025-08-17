@@ -4,6 +4,4 @@ pluginManagement {
 		mavenCentral()
 		google()
 	}
-
-	includeBuild("../DairyPublishing")
 }

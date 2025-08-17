@@ -9,6 +9,7 @@ repositories {
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "2.0.21"
 	id("java-gradle-plugin")
+	id("com.gradle.plugin-publish") version "1.3.0"
 }
 
 group = "dev.frozenmilk"
@@ -30,6 +31,19 @@ dependencies {
 	//noinspection GradleDependency
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.24")
 	implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
+}
+
+publishing {
+	repositories {
+		maven {
+			name = "Dairy"
+			url = uri("https://repo.dairy.foundation/releases")
+			credentials(PasswordCredentials::class)
+			authentication {
+				create<BasicAuthentication>("basic")
+			}
+		}
+	}
 }
 
 gradlePlugin {
