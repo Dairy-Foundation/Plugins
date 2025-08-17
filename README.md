@@ -70,7 +70,7 @@ A plugin that makes it easy to set up FTC related libraries, uses
 
 ```kt
 plugins {
-    id("dev.frozenmilk.ftc-libraries") version "10.3.0-0.1.3"
+    id("dev.frozenmilk.ftc-libraries") version "10.3.0-0.1.4"
 }
 ```
 
@@ -123,7 +123,7 @@ examples.
 
 ```kt
 plugins {
-    id("dev.frozenmilk.teamcode") version "10.3.0-0.1.3"
+    id("dev.frozenmilk.teamcode") version "10.3.0-0.1.4"
 }
 ```
 
@@ -138,7 +138,7 @@ See the templates repository for examples.
 
 ```kt
 plugins {
-    id("dev.frozenmilk.android-library") version "10.3.0-0.1.3"
+    id("dev.frozenmilk.android-library") version "10.3.0-0.1.4"
 }
 ```
 
@@ -152,7 +152,7 @@ See the templates repository for examples.
 
 ```kt
 plugins {
-    id("dev.frozenmilk.jvm-library") version "10.3.0-0.1.3"
+    id("dev.frozenmilk.jvm-library") version "10.3.0-0.1.4"
 }
 ```
 
