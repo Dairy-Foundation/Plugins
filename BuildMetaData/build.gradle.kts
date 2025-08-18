@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "dev.frozenmilk"
-version = "0.0.0"
+version = "0.0.1"
 
 kotlin {
 	jvmToolchain(17)
