@@ -1,36 +1,41 @@
 package dev.frozenmilk
 
+import org.gradle.api.provider.MapProperty
+import org.gradle.api.provider.Property
 import org.gradle.declarative.dsl.model.annotations.Adding
 
-open class BuildMetaDataExtension {
-    private var _packagePath: String? = null
+abstract class BuildMetaDataExtension {
+    abstract val packagePathProperty: Property<String>
     /**
      * dot separated package path. e.g. "dev.frozenmilk"
      */
     var packagePath: String
         get() = run {
-            check(_packagePath != null) { "meta.packagePath not set" }
-            _packagePath!!
+            check(packagePathProperty.isPresent && packagePathProperty.get() != null) { "meta.packagePath not set" }
+            packagePathProperty.get()
         }
         set(value) {
-            _packagePath = value
+            packagePathProperty.value(value)
         }
 
-    private var _name: String? = null
+    abstract val nameProperty: Property<String>
 
     /**
      * project name
      */
     var name: String
         get() = run {
-            check(_name != null) { "meta.name not set" }
-            _name!!
+            check(nameProperty.isPresent && nameProperty.get() != null) { "meta.name not set" }
+            nameProperty.get()
         }
         set(value) {
-            _name = value
+            nameProperty.value(value)
         }
 
-    private val fields = LinkedHashMap<String, Pair<String, () -> String>>()
+    abstract val fieldsProperty: MapProperty<String, Pair<String, () -> String>>
+    init {
+        fieldsProperty.empty()
+    }
 
     /**
      * registers a build generated metadata field
@@ -39,8 +44,8 @@ open class BuildMetaDataExtension {
      */
     @Adding
     fun registerField(name: String, type: String, value: () -> String) {
-        require(!fields.contains(name)) { "already registered build metadata field for name $name" }
-        fields[name] = type to value
+        require(fieldsProperty.isPresent && !fieldsProperty.get().contains(name)) { "already registered build metadata field for name $name" }
+        fieldsProperty.put(name, type to value)
     }
     /**
      * registers a build generated metadata field
@@ -49,14 +54,4 @@ open class BuildMetaDataExtension {
      */
     @Adding
     fun registerField(name: String, type: String, value: String) = registerField(name, type) { value }
-
-    internal fun write(out: Appendable) {
-        out.appendLine("package $packagePath")
-        out.appendLine("object ${name}BuildMetaData {")
-        fields.entries.forEach { (name, tv) ->
-            val (type, value) = tv
-            out.appendLine("\t@JvmStatic val `$name`: $type = ${value()};")
-        }
-        out.appendLine("}")
-    }
 }
