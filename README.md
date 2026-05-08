@@ -217,6 +217,12 @@ ftc {
         implementation(core)
         implementation(ftc)
     }
+    
+    // the marrow block containing the marrow library
+    marrow {
+        // marrow doesn't have any dependencies other than the core
+        implementation(core)
+    }
 }
 ```
 
