@@ -6,6 +6,7 @@ import dev.frozenmilk.libs.ACMERobotics
 import dev.frozenmilk.libs.Dairy
 import dev.frozenmilk.libs.FateWeaver
 import dev.frozenmilk.libs.FtControl
+import dev.frozenmilk.libs.Marrow
 import dev.frozenmilk.libs.Next
 import dev.frozenmilk.libs.Pedro
 import dev.frozenmilk.libs.PsiLynx
@@ -94,4 +95,6 @@ class FTC(project: Project) : EasyAutoScopeRoot<FTC>(project, LogLevel.LIFECYCLE
     val psiLynx = PsiLynx(this)
 
     val fateWeaver = FateWeaver(this)
+
+    val marrow = Marrow(this)
 }
