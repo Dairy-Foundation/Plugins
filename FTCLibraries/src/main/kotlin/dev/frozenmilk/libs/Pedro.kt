@@ -14,7 +14,7 @@ class Pedro(ftc: FTC) : EasyAutoScope<Pedro>(ftc) {
         )
     }
 
-    val core by library("2.0.4")
-    val ftc by library("2.0.4")
+    val core by library("2.1.2")
+    val ftc by library("2.1.2")
     val telemetry by library("1.0.0")
 }
