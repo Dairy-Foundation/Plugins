@@ -14,6 +14,7 @@ class Solvers(ftc: FTC) : EasyAutoScope<Solvers>(ftc) {
         )
     }
 
-    val core by dependency("0.3.3")
-    val pedroPathing by dependency("0.3.3")
+    val core by dependency("0.3.6")
+    val pedroPathing by dependency("0.3.6")
+    val photon by dependency("0.3.6")
 }
