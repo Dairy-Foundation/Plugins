@@ -173,9 +173,8 @@ ftc {
 
     // the pedro block contains pedro pathing dependencies
     pedro {
-        implementation(core)
-        implementation(ftc)
-        implementation(telemetry)
+        implementation(revhub)
+        implementation(tuning)
     }
 
     // the ftcontrol block contains panels dependencies
