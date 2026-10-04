@@ -6,7 +6,7 @@ import dev.frozenmilk.easyautolibraries.EasyAutoScope
 
 @Suppress("unused")
 class Marrow(ftc: FTC) : EasyAutoScope<Marrow>(ftc){
-    var version = "1.1.0"
+    var version = "1.2.0"
 
     private val Marrow = dependency { name ->
         EasyAutoDependency(
