@@ -15,5 +15,5 @@ class Pedro(ftc: FTC) : EasyAutoScope<Pedro>(ftc) {
     }
 
     val revhub by library("3.0.1")
-    val tuning by library("1.0.0")
+    val tuning by library("1.0.1")
 }
