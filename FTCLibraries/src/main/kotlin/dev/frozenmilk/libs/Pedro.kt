@@ -14,6 +14,16 @@ class Pedro(ftc: FTC) : EasyAutoScope<Pedro>(ftc) {
         )
     }
 
-    val revhub by library("3.0.1")
+    val revhub by library("3.0.2")
     val tuning by library("1.0.1")
+
+    private fun extension(version: String) = dependency { name ->
+        EasyAutoDependency(
+            group = "com.pedropathing.ivy",
+            artifact = name,
+            version = version,
+        )
+    }
+
+    val pedro by extension("1.1.1")
 }
