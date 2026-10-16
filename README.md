@@ -175,6 +175,9 @@ ftc {
     pedro {
         implementation(revhub)
         implementation(tuning)
+        
+        // ivy
+        implementation(pedro)
     }
 
     // the ftcontrol block contains panels dependencies
